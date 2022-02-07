@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 function App() {
+  const [img, setImg] = useState([]);
+  const url = "https://jsonplaceholder.typicode.com/photos";
+  const getPhotos = () => {
+    axios
+      .get(url)
+      .then((r) => setImg(r.data.slice(0, 20)))
+      .catch();
+  };
+  useEffect(() => {
+    getPhotos();
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {img.map((i) => {
+        return (
+          <LazyLoadImage key={i.url} height="400px" src={i.url} width="400px" />
+        );
+      })}
     </div>
   );
 }
